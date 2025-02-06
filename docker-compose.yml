@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: image_db
+      POSTGRES_DB: images
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -25,7 +25,7 @@ services:
       - ./uploads:/app/uploads
       - ./processed:/app/processed
     environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/image_db
+      - DATABASE_URL=postgresql://user:password@postgres:5432/images
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     ports:
@@ -42,7 +42,7 @@ services:
       - ./uploads:/app/uploads
       - ./processed:/app/processed
     environment:
-      - DATABASE_URL=postgresql://user:password@postgres:5432/image_db
+      - DATABASE_URL=postgresql://user:password@postgres:5432/images
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:

@@ -26,7 +26,7 @@ dag = DAG(
 
 
 def get_pending_images():
-    engine = create_engine('postgresql://user:password@postgres:5432/image_db')
+    engine = create_engine('postgresql://user:password@postgres:5432/images')
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -55,7 +55,7 @@ def monitor_completion(ti):
     if not pending_image_ids:
         return "No images to monitor"
 
-    engine = create_engine('postgresql://user:password@postgres:5432/image_db')
+    engine = create_engine('postgresql://user:password@postgres:5432/images')
     Session = sessionmaker(bind=engine)
     session = Session()
 

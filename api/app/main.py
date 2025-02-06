@@ -21,17 +21,14 @@ async def submit_batch(
     results = []
 
     for file in files:
-        # Generate unique filename
         file_ext = os.path.splitext(file.filename)[1]
         unique_filename = f"{uuid.uuid4()}{file_ext}"
         file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
-        # Save uploaded file
         with open(file_path, "wb") as buffer:
             content = await file.read()
             buffer.write(content)
 
-        # Create database entry
         db_image = Image(
             original_image_path=file_path,
             status='pending'
@@ -40,7 +37,6 @@ async def submit_batch(
         db.commit()
         db.refresh(db_image)
 
-        # Queue processing task
         process_image.delay(str(db_image.id))
 
         results.append({
