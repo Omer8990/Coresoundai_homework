@@ -24,7 +24,7 @@ docker-compose exec api alembic upgrade head
 
 # Initialize Airflow DB (make sure database exists first!)
 docker-compose exec postgres psql -U user -c "CREATE DATABASE airflow;" 2>/dev/null || echo "Database airflow already exists"
-docker-compose exec airflow-webserver airflow db migrate
+docker-compose exec airflow-webserver airflow db init
 
 # Create Airflow user
 docker-compose exec airflow-webserver airflow users create \
