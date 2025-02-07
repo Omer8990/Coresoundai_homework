@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:13
@@ -24,6 +22,7 @@ services:
     volumes:
       - ./uploads:/app/uploads
       - ./processed:/app/processed
+      - .:/app
     environment:
       - DATABASE_URL=postgresql://user:password@postgres:5432/images
       - CELERY_BROKER_URL=redis://redis:6379/0
