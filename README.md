@@ -73,7 +73,7 @@ cp .env.example .env
 
 ## Services
 
-- FastAPI: http://localhost:8000
+- FastAPI: http://localhost:8000/docs
 - Airflow: http://localhost:8080
 - PostgreSQL: http://localhost:5432
 - Redis: http://localhost:6379
