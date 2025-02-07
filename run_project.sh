@@ -13,9 +13,6 @@ until docker-compose exec postgres pg_isready -U user -h localhost; do
 done
 echo "PostgreSQL is ready!"
 
-# Ensure the Airflow database exists
-docker-compose exec postgres psql -U user -c "CREATE DATABASE airflow;" 2>/dev/null || echo "Database airflow already exists"
-
 # Start only the Airflow initialization container
 docker-compose run --rm airflow-webserver airflow db init
 
@@ -36,5 +33,3 @@ docker-compose exec airflow-webserver airflow users create \
     --lastname User \
     --role Admin \
     --email admin@example.com
-
-docker-compose up -d
