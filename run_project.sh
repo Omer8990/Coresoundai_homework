@@ -6,25 +6,27 @@ docker-compose down -v
 # Start only PostgreSQL first
 docker-compose up -d postgres
 
-# Wait for PostgreSQL to be ready (check using pg_isready)
+# Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL to be ready..."
 until docker-compose exec postgres pg_isready -U user -h localhost; do
   sleep 2
 done
 echo "PostgreSQL is ready!"
 
-# Now start the rest of the services
+# Ensure the Airflow database exists
+docker-compose exec postgres psql -U user -c "CREATE DATABASE airflow;" 2>/dev/null || echo "Database airflow already exists"
+
+# Start only the Airflow initialization container
+docker-compose run --rm airflow-webserver airflow db init
+
+# Now start all services
 docker-compose up -d
 
-# Wait a few more seconds to be extra safe
+# Wait for services to settle
 sleep 5
 
-# Run your API migrations
+# Run API migrations
 docker-compose exec api alembic upgrade head
-
-# Initialize Airflow DB (make sure database exists first!)
-docker-compose exec postgres psql -U user -c "CREATE DATABASE airflow;" 2>/dev/null || echo "Database airflow already exists"
-docker-compose exec airflow-webserver airflow db init
 
 # Create Airflow user
 docker-compose exec airflow-webserver airflow users create \
