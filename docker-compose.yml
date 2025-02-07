@@ -9,6 +9,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - "5432:5432"
     healthcheck:
@@ -58,7 +59,7 @@ services:
     image: apache/airflow:2.7.1
     command: webserver
     environment:
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://user:password@postgres:5432/airflow
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql://user:password@postgres:5432/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
     volumes:
@@ -69,18 +70,17 @@ services:
       postgres:
         condition: service_healthy
 
-
   airflow-scheduler:
     image: apache/airflow:2.7.1
     command: scheduler
     environment:
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://user:password@postgres:5432/airflow
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql://user:password@postgres:5432/airflow
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     volumes:
       - ./dags:/opt/airflow/dags
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
+      - airflow-webserver
 
 volumes:
   postgres_data:
