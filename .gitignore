@@ -48,3 +48,6 @@ logs/
 
 # Custom
 !.gitignore
+
+uploads
+processed
