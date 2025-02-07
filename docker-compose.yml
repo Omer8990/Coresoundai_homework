@@ -4,12 +4,12 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: images  # Default DB, but we create 'airflow' too in init script
+      POSTGRES_DB: images
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh  # Make sure it creates 'airflow'
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     ports:
       - "5432:5432"
     healthcheck:
