@@ -65,28 +65,11 @@ A scalable system for batch processing images using FastAPI, Celery, Redis, and 
 cp .env.example .env
 ```
 
-3. Start the services:
+3. run the bash script to start everything:
 ```bash
-docker-compose up -d
+./run_project
 ```
 
-4. Run database migrations:
-```bash
-docker-compose exec api alembic upgrade head
-```
-
-5. Initialize Airflow:
-```bash
-docker-compose exec airflow-webserver airflow db init
-docker-compose exec airflow-webserver airflow users create \
-    --username admin \
-    --password admin \
-    --firstname Admin \
-    --lastname User \
-    --role Admin \
-    --email admin@example.com
-
- ```
 
 ## Services
 
