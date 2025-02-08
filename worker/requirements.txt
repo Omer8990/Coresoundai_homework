@@ -1,0 +1,7 @@
+sqlalchemy>=0.26.1
+psycopg2-binary>=2.9.10
+celery>=5.4.0
+redis>=5.2.1
+Pillow>=11.1.0
+python-dotenv>=1.0.1
+tenacity>=9.0.0

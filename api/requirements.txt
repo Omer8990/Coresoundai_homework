@@ -1,0 +1,16 @@
+fastapi>=0.115.8
+uvicorn>=0.34.0
+python-multipart>=0.0.20
+sqlalchemy>=0.26.1
+psycopg2-binary>=2.9.10
+celery>=5.4.0
+redis>=5.2.1
+Pillow>=11.1.0
+requests>=2.32.3
+python-dotenv>=1.0.1
+alembic>=1.14.1
+apache-airflow>=2.10.4
+apache-airflow-providers-postgres>=6.0.0
+pydantic>=2.10.6
+gunicorn>=23.0.0
+tenacity>=9.0.0

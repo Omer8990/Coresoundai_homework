@@ -1,0 +1,53 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
+*.env
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# FastAPI
+*.sqlite3
+instance/
+
+# PyCharm
+.idea/
+*.iml
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Celery
+celerybeat-schedule
+
+# Redis
+redis-data/
+
+# Airflow
+airflow.cfg
+unittests.cfg
+webserver_config.py
+logs/
+*.log
+*.pid
+
+# Custom
+!.gitignore
+
+uploads
+processed

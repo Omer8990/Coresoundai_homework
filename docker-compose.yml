@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: images
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "user", "-d", "images" ]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    volumes:
+      - ./uploads:/app/uploads
+      - ./processed:/app/processed
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/images
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    volumes:
+      - ./uploads:/app/uploads
+      - ./processed:/app/processed
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/images
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+
+  airflow-webserver:
+    image: apache/airflow:2.7.1
+    command: webserver
+    environment:
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://user:password@postgres:5432/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+#      - AIRFLOW__CORE__FERNET_KEY=<the key>
+    volumes:
+      - ./dags:/opt/airflow/dags
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  airflow-scheduler:
+    image: apache/airflow:2.7.1
+    command: scheduler
+    environment:
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://user:password@postgres:5432/airflow
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    volumes:
+      - ./dags:/opt/airflow/dags
+    depends_on:
+      - airflow-webserver
+
+volumes:
+  postgres_data:
